@@ -1,0 +1,27 @@
+apiVersion: apps.openyurt.io/v1beta1
+kind: NodePool
+metadata:
+  name: beijing
+spec:
+  type: Edge
+  annotations:
+    apps.openyurt.io/example: test-beijing
+  taints:
+    - key: apps.openyurt.io/example
+      value: beijing
+      effect: NoSchedule
+
+---
+apiVersion: apps.openyurt.io/v1beta1
+kind: NodePool
+metadata:
+  name: shanghai
+spec:
+  type: Edge
+  annotations:
+    apps.openyurt.io/example: test-shanghai
+  taints:
+    - key: apps.openyurt.io/example
+      value: shanghai
+      effect: NoSchedule
+

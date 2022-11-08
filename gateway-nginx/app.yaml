@@ -1,0 +1,42 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: nginx-gateway
+spec:
+  components:
+    - name: nginx-auxiliary
+      type: helm
+      properties:
+        url: https://github.com/chivalryq/nginx-gateway-chart
+        repoType: git
+        chart: charts/nginx-kubernetes-gateway-nginx-auxiliary
+        git:
+          branch: main
+    - name: nginx-gateway-nginx
+      type: helm
+      properties:
+        url: https://github.com/chivalryq/nginx-gateway-chart
+        repoType: git
+        chart: charts/nginx-kubernetes-gateway-nginx
+        git:
+          branch: main
+      traits:
+        - type: edge-nginx-gateway-nginx
+
+  policies:
+    - name: replication-default
+      type: replication
+      properties:
+        keys: ["beijing","shanghai"]
+        selector: ["nginx-gateway-nginx"]
+
+  workflow:
+    steps:
+      - name: apply-auxiliary
+        type: apply-component
+        properties:
+          component: nginx-auxiliary
+      - name: deploy-with-rep
+        type: deploy
+        properties:
+          policies: ["replication-default"]
